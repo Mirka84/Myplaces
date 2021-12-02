@@ -7,18 +7,19 @@ import MapView, { Marker } from'react-native-maps';
 
 export default function map({ route, navigation }){
 
-    const{ address } = route.params;
+   const { address, savePlaces }=route.params; 
 
-    const initial = {
+  
+    const [initial]=useState({
       latitude: 60.200692,
       longitude: 24.934302,
       latitudeDelta: 0.0322,
       longitudeDelta: 0.0221
-    };
+    });  
+
+    const [region, setRegion]=useState(initial); 
+    const [place, setPlaces]=useState(''); 
   
-    const [region, setRegion]=useState(initial);  
-    
-    const [place, setPlace]=useState('');
 
     const getAddress = async () => {
       const url=`http://www.mapquestapi.com/geocoding/v1/address?key=3JIT9JdCuHOBuHA8jsz6eLzHUoceyCUT&location=${address}`;
@@ -29,20 +30,19 @@ export default function map({ route, navigation }){
         
         
         const { lat, lng }=data.results[0].locations[0].latLng;
-        console.log(place);
-        setRegion({...region, latitude: lat, longitude: lng})
-        
-        setPlace(data.results[0].providedLocation.location);
+        console.log(address);
+        setRegion({...region, latitude: lat, longitude: lng}); 
+        setPlaces(data.results[0].providedLocation.locations); 
         
       } catch (e) {
         Alert.alert('Error fetching data');
       }
+
+
       
     } 
 
     useEffect(() => { getAddress() }, []); 
-
-
 
   
     return (
@@ -57,7 +57,7 @@ export default function map({ route, navigation }){
           />
         </MapView>
 
-        <Button buttonStyle={{ width: 300 }} onPress={() => navigation.navigate('MY PLACES', {place: place})} title="Save the place" /> 
+        <Button buttonStyle={{ width: 300 }} onPress={() => savePlaces(place), navigation.goBack(null)} title="Save the place" /> 
     </View>
     );
   }
