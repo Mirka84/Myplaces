@@ -18,8 +18,7 @@ export default function map({ route, navigation }){
     });  
 
     const [region, setRegion]=useState(initial); 
-    const [place, setPlaces]=useState(''); 
-  
+   
 
     const getAddress = async () => {
       const url=`http://www.mapquestapi.com/geocoding/v1/address?key=3JIT9JdCuHOBuHA8jsz6eLzHUoceyCUT&location=${address}`;
@@ -30,9 +29,7 @@ export default function map({ route, navigation }){
         
         
         const { lat, lng }=data.results[0].locations[0].latLng;
-        console.log(address);
         setRegion({...region, latitude: lat, longitude: lng}); 
-        setPlaces(data.results[0].providedLocation.locations); 
         
       } catch (e) {
         Alert.alert('Error fetching data');
@@ -57,7 +54,7 @@ export default function map({ route, navigation }){
           />
         </MapView>
 
-        <Button buttonStyle={{ width: 300 }} onPress={() => savePlaces(place), navigation.goBack(null)} title="Save the place" /> 
+        <Button buttonStyle={{ width: 300 }} onPress={() => {savePlaces(address), navigation.goBack(null)}} title="Save the place" /> 
     </View>
     );
   }
